@@ -7,21 +7,30 @@ const ExpenseForm = (props) => {
   const [enteredTitleIsTouched, setEnteredTitleIsTouched] = useState(false);
 
   const [enteredAmount, setEnteredAmount] = useState("");
+  const [enteredAmountIsTouched, setEnteredAmountIsTouched] = useState(false);
+
   const [enteredDate, setEnteredDate] = useState("");
+  const [enteredDateIsTouched, setEnteredDateIsTouched] = useState("");
 
   const enteredTitleIsValid = enteredTitle.trim() !== "";
   const titleIsInValid = !enteredTitleIsValid && enteredTitleIsTouched;
 
-  let formIsValid = false;
+  const enteredAmountIsValid = enteredAmount.trim() !== "";
+  const enteredAmountIsInvalid =
+    !enteredAmountIsValid && enteredAmountIsTouched;
 
-  if (enteredTitleIsValid) {
+  const enteredDateIsValid = enteredDate.trim() !== "";
+  const enteredDateIsInvalid = !enteredDateIsValid && enteredDateIsTouched;
+
+  let formIsValid = false;
+  // Form is valid when all inputs become valid
+  if (enteredTitleIsValid && enteredAmountIsValid && enteredDateIsValid) {
     formIsValid = true;
   }
 
   const titleChangeHandler = (event) => {
     setEnteredTitle(event.target.value);
   };
-
   const titleBlurHandler = (event) => {
     setEnteredTitleIsTouched(true);
   };
@@ -29,15 +38,23 @@ const ExpenseForm = (props) => {
   const amountChangeHandler = (event) => {
     setEnteredAmount(event.target.value);
   };
+  const amountBlurHandler = (event) => {
+    setEnteredAmountIsTouched(true);
+  };
 
   const dateChangeHandler = (event) => {
     setEnteredDate(event.target.value);
+  };
+  const dateBlurHandler = (event) => {
+    setEnteredDateIsTouched(true);
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
     setEnteredTitleIsTouched(true);
-    if (!enteredTitleIsValid) {
+    setEnteredAmountIsTouched(true);
+    setEnteredDateIsTouched(true);
+    if (!enteredTitleIsValid || !enteredAmountIsValid) {
       return;
     }
     const expenseData = {
@@ -45,15 +62,22 @@ const ExpenseForm = (props) => {
       amount: enteredAmount,
       date: new Date(enteredDate),
     };
-
     props.onSaveExpenseData(expenseData);
     setEnteredTitle("");
     setEnteredTitleIsTouched(false);
     setEnteredAmount("");
+    setEnteredAmountIsTouched(false);
     setEnteredDate("");
+    setEnteredDateIsTouched(false);
   };
 
   const titleInputClasses = titleIsInValid
+    ? "new-expense__control invalid"
+    : "new-expense__control";
+  const amountInputClasses = enteredAmountIsInvalid
+    ? "new-expense__control invalid"
+    : "new-expense__control";
+  const DateInputClasses = enteredDateIsInvalid
     ? "new-expense__control invalid"
     : "new-expense__control";
 
@@ -70,10 +94,10 @@ const ExpenseForm = (props) => {
             onBlur={titleBlurHandler}
           />
           {titleIsInValid && (
-            <p className="error-text">Title must not be empty</p>
+            <p className="error-text">Title must not be empty!</p>
           )}
         </div>
-        <div className="new-expense__control">
+        <div className={amountInputClasses}>
           <label htmlFor="amount">Amount</label>
           <input
             id="amount"
@@ -82,9 +106,13 @@ const ExpenseForm = (props) => {
             step="0.01"
             value={enteredAmount}
             onChange={amountChangeHandler}
+            onBlur={amountBlurHandler}
           />
+          {enteredAmountIsInvalid && (
+            <p className="error-text">Amount must not be empty!</p>
+          )}
         </div>
-        <div className="new-expense__control">
+        <div className={DateInputClasses}>
           <label htmlFor="date">Date</label>
           <input
             id="date"
@@ -93,7 +121,11 @@ const ExpenseForm = (props) => {
             max="2022-12-31"
             value={enteredDate}
             onChange={dateChangeHandler}
+            onBlur={dateBlurHandler}
           />
+          {enteredDateIsInvalid && (
+            <p className="error-text">Date must not be empty!</p>
+          )}
         </div>
       </div>
       <div className="new-expense__actions">

@@ -24,3 +24,11 @@
 .new-expense__actions {
   text-align: right;
 }
+
+.error-text {
+  color: yellow;
+}
+
+.invalid input {
+  border: 2px solid #000;
+}

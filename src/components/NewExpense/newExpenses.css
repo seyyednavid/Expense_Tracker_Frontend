@@ -36,3 +36,13 @@
 .new-expense button.alternative:active {
   background-color: #ddb3f8;
 }
+
+
+button:disabled,
+button:disabled:hover,
+button:disabled:active {
+  background-color: #ccc;
+  color: #292929 !important;
+  border-color: #ccc;
+  cursor: not-allowed;
+}

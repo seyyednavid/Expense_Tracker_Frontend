@@ -7,3 +7,10 @@
   color: white;
   text-align: center;
 }
+
+.back_message {
+  color: yellow;
+  font-weight: bold;
+  text-align: center;
+  margin: 0.5rem 0;
+}

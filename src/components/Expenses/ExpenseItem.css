@@ -35,6 +35,16 @@
   border-radius: 12px;
 }
 
+.expense-item__actions {
+  margin: 0.25rem;
+}
+
+.custom-icon {
+  color: #fff;
+  margin: 0.25rem;
+  font-size: 20px;
+}
+
 @media (min-width: 580px) {
   .expense-item__description {
     flex-direction: row;

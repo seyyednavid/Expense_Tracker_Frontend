@@ -1,16 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaTrashAlt, FaEdit } from "react-icons/fa";
 import ExpenseDate from "./ExpenseDate";
 import Card from "../UI/Card";
 import "./ExpenseItem.css";
 import axios from "axios";
+import ConfirmationModal from "../UI/ConfirmationModal";
 
 const ExpenseItem = (props) => {
+  const [showModal, setShowModal] = useState(false);
   const expenseDeleteHandler = () => {
+    setShowModal(true);
+  };
+
+  const closeModalHandler = () => {
+    setShowModal(false);
+  };
+
+  const confirmDeleteHandler = () => {
     axios
       .delete(`http://localhost:3030/deleteExpense/${props.id}`)
       .then((response) => {
         props.onMessage(response.data.message);
+         setShowModal(false);
       })
       .catch((error) => {
         if (error.response.data.error) {
@@ -39,6 +50,12 @@ const ExpenseItem = (props) => {
           </div>
         </div>
       </Card>
+      {showModal && (
+        <ConfirmationModal
+          onCancel={closeModalHandler}
+          onConfirm={confirmDeleteHandler}
+        />
+      )}
     </li>
   );
 };

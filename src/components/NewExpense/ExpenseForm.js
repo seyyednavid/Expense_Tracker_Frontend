@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
+import axios from "axios";
 
 import "./ExpenseForm.css";
 
 const ExpenseForm = (props) => {
+  const [backendMessage, setBackendMessage] = useState("");
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredTitleIsTouched, setEnteredTitleIsTouched] = useState(false);
 
@@ -54,21 +56,38 @@ const ExpenseForm = (props) => {
     setEnteredTitleIsTouched(true);
     setEnteredAmountIsTouched(true);
     setEnteredDateIsTouched(true);
-    if (!enteredTitleIsValid || !enteredAmountIsValid) {
+    if (!enteredTitleIsValid || !enteredAmountIsValid || !enteredDateIsValid) {
       return;
     }
     const expenseData = {
       title: enteredTitle,
       amount: enteredAmount,
-      date: new Date(enteredDate),
+      date: enteredDate,
     };
-    props.onSaveExpenseData(expenseData);
+    axios
+      .post("http://localhost:3030/addExpense", expenseData)
+      .then((response) => {
+        setBackendMessage(response.data.message);
+      })
+      .catch((error) => {
+        if (error.response.data.error) {
+          setBackendMessage(error.response.data.errors);
+        } else if (error.response.data.message) {
+          setBackendMessage(error.response.data.message);
+        } else {
+          setBackendMessage(error.message);
+        }
+      });
     setEnteredTitle("");
     setEnteredTitleIsTouched(false);
     setEnteredAmount("");
     setEnteredAmountIsTouched(false);
     setEnteredDate("");
     setEnteredDateIsTouched(false);
+    // Clear the backendMessage state after 3 seconds
+    setTimeout(() => {
+      setBackendMessage("");
+    }, 3000);
   };
 
   const titleInputClasses = titleIsInValid
@@ -82,61 +101,64 @@ const ExpenseForm = (props) => {
     : "new-expense__control";
 
   return (
-    <form onSubmit={submitHandler}>
-      <div className="new-expense__controls">
-        <div className={titleInputClasses}>
-          <label htmlFor="title">Title</label>
-          <input
-            id="title"
-            type="text"
-            value={enteredTitle}
-            onChange={titleChangeHandler}
-            onBlur={titleBlurHandler}
-          />
-          {titleIsInValid && (
-            <p className="error-text">Title must not be empty!</p>
-          )}
+    <Fragment>
+      {backendMessage && <div className="back_message">{backendMessage}</div>}
+      <form onSubmit={submitHandler}>
+        <div className="new-expense__controls">
+          <div className={titleInputClasses}>
+            <label htmlFor="title">Title</label>
+            <input
+              id="title"
+              type="text"
+              value={enteredTitle}
+              onChange={titleChangeHandler}
+              onBlur={titleBlurHandler}
+            />
+            {titleIsInValid && (
+              <p className="error-text">Title must not be empty!</p>
+            )}
+          </div>
+          <div className={amountInputClasses}>
+            <label htmlFor="amount">Amount</label>
+            <input
+              id="amount"
+              type="number"
+              min="0.01"
+              step="0.01"
+              value={enteredAmount}
+              onChange={amountChangeHandler}
+              onBlur={amountBlurHandler}
+            />
+            {enteredAmountIsInvalid && (
+              <p className="error-text">Amount must not be empty!</p>
+            )}
+          </div>
+          <div className={DateInputClasses}>
+            <label htmlFor="date">Date</label>
+            <input
+              id="date"
+              type="date"
+              min="2019-01-01"
+              max="2022-12-31"
+              value={enteredDate}
+              onChange={dateChangeHandler}
+              onBlur={dateBlurHandler}
+            />
+            {enteredDateIsInvalid && (
+              <p className="error-text">Date must not be empty!</p>
+            )}
+          </div>
         </div>
-        <div className={amountInputClasses}>
-          <label htmlFor="amount">Amount</label>
-          <input
-            id="amount"
-            type="number"
-            min="0.01"
-            step="0.01"
-            value={enteredAmount}
-            onChange={amountChangeHandler}
-            onBlur={amountBlurHandler}
-          />
-          {enteredAmountIsInvalid && (
-            <p className="error-text">Amount must not be empty!</p>
-          )}
+        <div className="new-expense__actions">
+          <button type="button" onClick={props.onCancel}>
+            Cancel
+          </button>
+          <button disabled={!formIsValid} type="submit">
+            Add Expense
+          </button>
         </div>
-        <div className={DateInputClasses}>
-          <label htmlFor="date">Date</label>
-          <input
-            id="date"
-            type="date"
-            min="2019-01-01"
-            max="2022-12-31"
-            value={enteredDate}
-            onChange={dateChangeHandler}
-            onBlur={dateBlurHandler}
-          />
-          {enteredDateIsInvalid && (
-            <p className="error-text">Date must not be empty!</p>
-          )}
-        </div>
-      </div>
-      <div className="new-expense__actions">
-        <button type="button" onClick={props.onCancel}>
-          Cancel
-        </button>
-        <button disabled={!formIsValid} type="submit">
-          Add Expense
-        </button>
-      </div>
-    </form>
+      </form>
+    </Fragment>
   );
 };
 

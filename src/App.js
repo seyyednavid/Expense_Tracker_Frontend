@@ -24,15 +24,9 @@ const App = () => {
       .catch((error) => console.error("Error fetching data:", error));
   });
 
-  const addExpenseData = (expense) => {
-    setExpense((prevState) => {
-      return [expense, ...prevState];
-    });
-  };
-
   return (
     <div>
-      <NewExpense onAddExpenseData={addExpenseData} />
+      <NewExpense />
       <Expenses items={expense} />
     </div>
   );

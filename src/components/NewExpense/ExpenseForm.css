@@ -32,3 +32,10 @@
 .invalid input {
   border: 2px solid #000;
 }
+
+.back_message {
+  color: yellow;
+  font-weight: bold;
+  text-align: center;
+  margin: 0.5rem 0;
+}

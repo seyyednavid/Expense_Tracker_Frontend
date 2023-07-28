@@ -5,9 +5,12 @@ import Card from "../UI/Card";
 import "./ExpenseItem.css";
 import axios from "axios";
 import ConfirmationModal from "../UI/ConfirmationModal";
+import ExpenseUpdateForm from "../UI/ExpenseUpdateForm ";
 
 const ExpenseItem = (props) => {
   const [showModal, setShowModal] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
+
   const expenseDeleteHandler = () => {
     setShowModal(true);
   };
@@ -15,13 +18,16 @@ const ExpenseItem = (props) => {
   const closeModalHandler = () => {
     setShowModal(false);
   };
+  const toggleUpdateForm = () => {
+    setShowUpdateForm((prevShowUpdateForm) => !prevShowUpdateForm);
+  };
 
   const confirmDeleteHandler = () => {
     axios
       .delete(`http://localhost:3030/deleteExpense/${props.id}`)
       .then((response) => {
         props.onMessage(response.data.message);
-         setShowModal(false);
+        setShowModal(false);
       })
       .catch((error) => {
         if (error.response.data.error) {
@@ -46,7 +52,7 @@ const ExpenseItem = (props) => {
               className="custom-icon"
               onClick={expenseDeleteHandler}
             />
-            <FaEdit className="custom-icon" />
+            <FaEdit className="custom-icon" onClick={toggleUpdateForm} />
           </div>
         </div>
       </Card>
@@ -54,6 +60,15 @@ const ExpenseItem = (props) => {
         <ConfirmationModal
           onCancel={closeModalHandler}
           onConfirm={confirmDeleteHandler}
+        />
+      )}
+      {showUpdateForm && (
+        <ExpenseUpdateForm
+          id={props.id}
+          title={props.title}
+          amount={props.amount}
+          date={props.date}
+          onCancel={toggleUpdateForm}
         />
       )}
     </li>

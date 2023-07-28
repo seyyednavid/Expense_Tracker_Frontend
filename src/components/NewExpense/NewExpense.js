@@ -12,7 +12,6 @@ const NewExpense = (props) => {
   const stopEditingHandler = () => {
     setIsEditing(false);
   };
-
   return (
     <div className="new-expense">
       {!isEditing && (

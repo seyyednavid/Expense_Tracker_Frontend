@@ -24,7 +24,9 @@ const ExpenseItem = (props) => {
 
   const confirmDeleteHandler = () => {
     axios
-      .delete(`http://localhost:3030/deleteExpense/${props.id}`)
+      .delete(
+        `https://expense-tracker-t2v6.onrender.com/deleteExpense/${props.id}`
+      )
       .then((response) => {
         props.onMessage(response.data.message);
         setShowModal(false);

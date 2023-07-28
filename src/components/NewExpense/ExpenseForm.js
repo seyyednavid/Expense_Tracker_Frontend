@@ -65,7 +65,7 @@ const ExpenseForm = (props) => {
       date: enteredDate,
     };
     axios
-      .post("http://localhost:3030/addExpense", expenseData)
+      .post("https://expense-tracker-t2v6.onrender.com/addExpense", expenseData)
       .then((response) => {
         setBackendMessage(response.data.message);
       })
@@ -139,7 +139,7 @@ const ExpenseForm = (props) => {
               id="date"
               type="date"
               min="2019-01-01"
-              max="2022-12-31"
+              max="2024-12-31"
               value={enteredDate}
               onChange={dateChangeHandler}
               onBlur={dateBlurHandler}

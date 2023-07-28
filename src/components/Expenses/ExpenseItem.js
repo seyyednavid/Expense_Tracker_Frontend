@@ -4,8 +4,8 @@ import ExpenseDate from "./ExpenseDate";
 import Card from "../UI/Card";
 import "./ExpenseItem.css";
 import axios from "axios";
-import ConfirmationModal from "../UI/ConfirmationModal";
-import ExpenseUpdateForm from "../UI/ExpenseUpdateForm ";
+import ConfirmationModal from "../UI/deleteConfirmationModal";
+import ExpenseUpdateForm from "../UI/ExpenseUpdateModal ";
 
 const ExpenseItem = (props) => {
   const [showModal, setShowModal] = useState(false);

@@ -21,7 +21,7 @@ const ExpenseUpdateForm = (props) => {
     setUpdatedDate(event.target.value);
   };
   const updatedTitleIsValid = updatedTitle.trim() !== "";
-  const updatedAmountIsValid = updatedAmount.trim() !== "";
+  const updatedAmountIsValid = Number(updatedAmount.trim()) !== "";
   const updatedDateIsValid = updatedDate.trim() !== "";
 
   let updateButtonIsValid = false;

@@ -4,7 +4,7 @@ import NewExpense from "./components/NewExpense/NewExpense";
 import Expenses from "./components/Expenses/Expenses";
 
 const App = () => {
-  const [expense, setExpense] = useState([]);
+  let [expense, setExpense] = useState([]);
 
   function parseISODate(dateString) {
     return new Date(dateString);
@@ -12,7 +12,8 @@ const App = () => {
 
   useEffect(() => {
     axios
-      .get("https://expense-tracker-t2v6.onrender.com/")
+      // .get("https://expense-tracker-t2v6.onrender.com/")
+      .get("http://localhost:3030/")
       .then((response) => {
         // Parse date strings to Date objects
         const expensesWithDates = response.data.data.map((expense) => ({
@@ -22,13 +23,14 @@ const App = () => {
         setExpense(expensesWithDates);
       })
       .catch((error) => console.error("Error fetching data:", error));
-  },[]);
-
-  return (
+  }, []);
+  return expense.length ? (
     <div>
-      <NewExpense />
-      <Expenses items={expense} />
+      <NewExpense expense={expense} setExpense={setExpense} />
+      <Expenses expense={expense} setExpense={setExpense} />
     </div>
+  ) : (
+    <h1>Loading...</h1>
   );
 };
 

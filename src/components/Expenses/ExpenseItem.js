@@ -5,11 +5,12 @@ import Card from "../UI/Card";
 import "./ExpenseItem.css";
 import axios from "axios";
 import ConfirmationModal from "../UI/deleteConfirmationModal";
-import ExpenseUpdateForm from "../UI/ExpenseUpdateModal ";
+import ExpenseUpdateModal from "../UI/ExpenseUpdateModal";
 
 const ExpenseItem = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
+  const { id, title, amount, date, onMessage, expense, setExpense } = props;
 
   const expenseDeleteHandler = () => {
     setShowModal(true);
@@ -22,22 +23,30 @@ const ExpenseItem = (props) => {
     setShowUpdateForm((prevShowUpdateForm) => !prevShowUpdateForm);
   };
 
+  const updateMessage = (updateMessageFromBackend) => {
+    onMessage(updateMessageFromBackend);
+  };
+
   const confirmDeleteHandler = () => {
     axios
-      .delete(
-        `https://expense-tracker-t2v6.onrender.com/deleteExpense/${props.id}`
-      )
+      .delete(`http://localhost:3030/deleteExpense/${id}`)
       .then((response) => {
-        props.onMessage(response.data.message);
-        setShowModal(false);
+        if (response.status === 200) {
+          const expenseAfterDelete = expense.filter((item) => item.id !== id);
+          setExpense(expenseAfterDelete);
+          onMessage(response.data.message);
+          setShowModal(false);
+        } else {
+          alert(response.data.message, response.status);
+        }
       })
       .catch((error) => {
         if (error.response.data.error) {
-          props.onMessage(error.response.data.errors);
+          onMessage(error.response.data.errors);
         } else if (error.response.data.message) {
-          props.onMessage(error.response.data.message);
+          onMessage(error.response.data.message);
         } else {
-          props.onMessage(error.message);
+          onMessage(error.message);
         }
       });
   };
@@ -45,10 +54,10 @@ const ExpenseItem = (props) => {
   return (
     <li>
       <Card className="expense-item">
-        <ExpenseDate date={props.date} />
+        <ExpenseDate date={date} />
         <div className="expense-item__description">
-          <h2>{props.title}</h2>
-          <div className="expense-item__price">${props.amount} </div>
+          <h2>{title}</h2>
+          <div className="expense-item__price">${amount} </div>
           <div className="expense-item__actions">
             <FaTrashAlt
               className="custom-icon"
@@ -65,12 +74,15 @@ const ExpenseItem = (props) => {
         />
       )}
       {showUpdateForm && (
-        <ExpenseUpdateForm
-          id={props.id}
-          title={props.title}
-          amount={props.amount}
-          date={props.date}
+        <ExpenseUpdateModal
+          id={id}
+          title={title}
+          amount={amount}
+          date={date}
           onCancel={toggleUpdateForm}
+          expense={expense}
+          setExpense={setExpense}
+          onMessage={updateMessage}
         />
       )}
     </li>

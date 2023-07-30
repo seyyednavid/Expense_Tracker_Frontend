@@ -4,6 +4,7 @@ import axios from "axios";
 import "./ExpenseForm.css";
 
 const ExpenseForm = (props) => {
+  const { expense, setExpense } = props;
   const [backendMessage, setBackendMessage] = useState("");
   const [enteredTitle, setEnteredTitle] = useState("");
   const [enteredTitleIsTouched, setEnteredTitleIsTouched] = useState(false);
@@ -44,8 +45,8 @@ const ExpenseForm = (props) => {
     setEnteredAmountIsTouched(true);
   };
 
-  const dateChangeHandler = (event) => {
-    setEnteredDate(event.target.value);
+  const dateChangeHandler = (val) => {
+    setEnteredDate(val);
   };
   const dateBlurHandler = (event) => {
     setEnteredDateIsTouched(true);
@@ -59,16 +60,25 @@ const ExpenseForm = (props) => {
     if (!enteredTitleIsValid || !enteredAmountIsValid || !enteredDateIsValid) {
       return;
     }
+
     const expenseData = {
+      id: props.expense.length,
       title: enteredTitle,
       amount: enteredAmount,
-      date: enteredDate,
+      date: new Date(enteredDate),
     };
+
     axios
-      .post("https://expense-tracker-t2v6.onrender.com/addExpense", expenseData)
+      .post("http://localhost:3030/addExpense", expenseData)
       .then((response) => {
-        setBackendMessage(response.data.message);
+        if (response.status === 201) {
+          setExpense([...expense, expenseData]);
+          setBackendMessage(response.data.message);
+        } else {
+          alert(response.data.message, response.status);
+        }
       })
+
       .catch((error) => {
         if (error.response.data.error) {
           setBackendMessage(error.response.data.errors);
@@ -78,16 +88,21 @@ const ExpenseForm = (props) => {
           setBackendMessage(error.message);
         }
       });
+
+    setForm();
+    // Clear the backendMessage state after 3 seconds
+    setTimeout(() => {
+      setBackendMessage("");
+    }, 3000);
+  };
+
+  const setForm = () => {
     setEnteredTitle("");
     setEnteredTitleIsTouched(false);
     setEnteredAmount("");
     setEnteredAmountIsTouched(false);
     setEnteredDate("");
     setEnteredDateIsTouched(false);
-    // Clear the backendMessage state after 3 seconds
-    setTimeout(() => {
-      setBackendMessage("");
-    }, 3000);
   };
 
   const titleInputClasses = titleIsInValid
@@ -111,7 +126,7 @@ const ExpenseForm = (props) => {
               id="title"
               type="text"
               value={enteredTitle}
-              onChange={titleChangeHandler}
+              onChange={(event) => titleChangeHandler(event)}
               onBlur={titleBlurHandler}
             />
             {titleIsInValid && (
@@ -126,7 +141,7 @@ const ExpenseForm = (props) => {
               min="0.01"
               step="0.01"
               value={enteredAmount}
-              onChange={amountChangeHandler}
+              onChange={(event) => amountChangeHandler(event)}
               onBlur={amountBlurHandler}
             />
             {enteredAmountIsInvalid && (
@@ -141,7 +156,7 @@ const ExpenseForm = (props) => {
               min="2019-01-01"
               max="2024-12-31"
               value={enteredDate}
-              onChange={dateChangeHandler}
+              onChange={(event) => dateChangeHandler(event.target.value)}
               onBlur={dateBlurHandler}
             />
             {enteredDateIsInvalid && (

@@ -1,35 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import ExpenseItem from "./ExpenseItem";
 import "./ExpenseList.css";
 
 const ExpenseList = (props) => {
   const [backendDeletedMessage, setBackendDeletedMessage] = useState("");
-  if (props.items.length === 0) {
+  const { items, expense, setExpense } = props;
+  if (items.length === 0) {
     return <h2 className="expenses-list__fallback">Found no expenses</h2>;
   }
-  const deleteMessageHandler = (messageForBackendMessage) => {
-    setBackendDeletedMessage(messageForBackendMessage);
+  const MessageHandler = (messageFormBackend) => {
+    setBackendDeletedMessage(messageFormBackend);
     setTimeout(() => {
       setBackendDeletedMessage("");
     }, 3000);
   };
 
   return (
-    <ul className="expenses-list">
+    <Fragment>
       {backendDeletedMessage && (
         <div className="back_message">{backendDeletedMessage}</div>
       )}
-      {props.items.map((expense) => (
-        <ExpenseItem
-          id={expense.id}
-          key={expense.id}
-          title={expense.title}
-          amount={expense.amount}
-          date={expense.date}
-          onMessage={deleteMessageHandler}
-        />
-      ))}
-    </ul>
+      <ul className="expenses-list">
+        {items.map((item) => (
+          <ExpenseItem
+            id={item.id}
+            key={item.id}
+            title={item.title}
+            amount={item.amount}
+            date={item.date}
+            onMessage={MessageHandler}
+            expense={expense}
+            setExpense={setExpense}
+          />
+        ))}
+      </ul>
+    </Fragment>
   );
 };
 

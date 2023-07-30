@@ -29,7 +29,7 @@ const ExpenseItem = (props) => {
 
   const confirmDeleteHandler = () => {
     axios
-      .delete(`http://localhost:3030/deleteExpense/${id}`)
+      .delete(`https://expense-tracker-t2v6.onrender.com/deleteExpense/${id}`)
       .then((response) => {
         if (response.status === 200) {
           const expenseAfterDelete = expense.filter((item) => item.id !== id);

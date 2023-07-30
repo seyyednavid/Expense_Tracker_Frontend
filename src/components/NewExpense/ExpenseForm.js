@@ -69,7 +69,7 @@ const ExpenseForm = (props) => {
     };
 
     axios
-      .post("http://localhost:3030/addExpense", expenseData)
+      .post("https://expense-tracker-t2v6.onrender.com/addExpense", expenseData)
       .then((response) => {
         if (response.status === 201) {
           setExpense([...expense, expenseData]);

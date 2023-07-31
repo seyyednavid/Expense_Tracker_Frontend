@@ -45,11 +45,14 @@ const ExpenseUpdateModal = (props) => {
     };
 
     axios
-      .put(`https://expense-tracker-t2v6.onrender.com/updateExpense/${id}`, updatedExpense)
+      .put(
+        `https://expense-tracker-t2v6.onrender.com/updateExpense/${id}`,
+        updatedExpense
+      )
       .then((response) => {
         if (response.status === 200) {
           const expenseAfterUpdate = expense.map((item) => {
-            if (item.id === id) {
+            if (item._id === id) {
               return { ...item, ...updatedExpense };
             } else {
               return item;

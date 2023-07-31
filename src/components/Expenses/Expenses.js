@@ -15,7 +15,6 @@ const Expenses = (props) => {
   const filteredExpenses = expense.filter((item) => {
     return item.date.getFullYear() === Number(filteredYear);
   });
-
   return (
     expense.length && (
       <div>

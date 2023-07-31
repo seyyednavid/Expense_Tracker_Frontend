@@ -13,6 +13,7 @@ const App = () => {
   useEffect(() => {
     axios
       .get("https://expense-tracker-t2v6.onrender.com/")
+
       .then((response) => {
         // Parse date strings to Date objects
         const expensesWithDates = response.data.data.map((expense) => ({

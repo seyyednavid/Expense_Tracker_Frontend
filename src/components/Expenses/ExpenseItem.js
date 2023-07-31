@@ -32,7 +32,7 @@ const ExpenseItem = (props) => {
       .delete(`https://expense-tracker-t2v6.onrender.com/deleteExpense/${id}`)
       .then((response) => {
         if (response.status === 200) {
-          const expenseAfterDelete = expense.filter((item) => item.id !== id);
+          const expenseAfterDelete = expense.filter((item) => item._id !== id);
           setExpense(expenseAfterDelete);
           onMessage(response.data.message);
           setShowModal(false);

@@ -60,19 +60,31 @@ const ExpenseForm = (props) => {
     if (!enteredTitleIsValid || !enteredAmountIsValid || !enteredDateIsValid) {
       return;
     }
-
     const expenseData = {
-      id: props.expense.length,
       title: enteredTitle,
       amount: enteredAmount,
       date: new Date(enteredDate),
     };
 
     axios
-      .post("https://expense-tracker-t2v6.onrender.com/addExpense", expenseData)
+      .post(
+        "https://expense-tracker-t2v6.onrender.com/addExpense",
+        expenseData,
+        {
+          responseType: "json",
+          transformResponse: [
+            (data) => {
+              const parsedData = JSON.parse(data);
+              // Convert the date field from string to Date object
+              parsedData.data.date = new Date(parsedData.data.date);
+              return parsedData;
+            },
+          ],
+        }
+      )
       .then((response) => {
         if (response.status === 201) {
-          setExpense([...expense, expenseData]);
+          setExpense([...expense, response.data.data]);
           setBackendMessage(response.data.message);
         } else {
           alert(response.data.message, response.status);

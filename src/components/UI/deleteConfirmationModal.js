@@ -1,7 +1,7 @@
 import React from "react";
-import "./deleteConfirmationModal.css";
+import "./DeleteConfirmationModal.css";
 
-const ConfirmationModal = (props) => {
+const DeleteConfirmationModal = (props) => {
   return (
     <div className="modal-overlay">
       <div className="confirmation-modal">
@@ -16,4 +16,4 @@ const ConfirmationModal = (props) => {
   );
 };
 
-export default ConfirmationModal;
+export default DeleteConfirmationModal;

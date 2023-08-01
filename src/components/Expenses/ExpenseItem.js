@@ -4,7 +4,7 @@ import ExpenseDate from "./ExpenseDate";
 import Card from "../UI/Card";
 import "./ExpenseItem.css";
 import axios from "axios";
-import ConfirmationModal from "../UI/deleteConfirmationModal";
+import DeleteConfirmationModal from "../UI/DeleteConfirmationModal";
 import ExpenseUpdateModal from "../UI/ExpenseUpdateModal";
 
 const ExpenseItem = (props) => {
@@ -68,7 +68,7 @@ const ExpenseItem = (props) => {
         </div>
       </Card>
       {showModal && (
-        <ConfirmationModal
+        <DeleteConfirmationModal
           onCancel={closeModalHandler}
           onConfirm={confirmDeleteHandler}
         />

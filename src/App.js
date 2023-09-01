@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NewExpense from "./components/NewExpense/NewExpense";
 import Expenses from "./components/Expenses/Expenses";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const App = () => {
   let [expense, setExpense] = useState([]);
@@ -30,7 +32,10 @@ const App = () => {
       <Expenses expense={expense} setExpense={setExpense} />
     </div>
   ) : (
-    <h1>Loading...</h1>
+    <div style={{ textAlign: "center", fontWeight: "bolder", color: "white", marginTop: "2rem" }}>
+      <FontAwesomeIcon icon={faSpinner} spin />
+      <p>Loading...</p>
+    </div>
   );
 };
 
